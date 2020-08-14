@@ -2,6 +2,18 @@ from room import Room
 import random
 import math
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+
 class World:
     def __init__(self):
         self.starting_room = None
@@ -34,7 +46,7 @@ class World:
                 self.rooms[room_id].connect_rooms('w', self.rooms[room_graph[room_id][1]['w']])
         self.starting_room = self.rooms[0]
 
-    def print_rooms(self):
+    def print_rooms(self, visited):
         rotated_room_grid = []
         for i in range(0, len(self.room_grid)):
             rotated_room_grid.append([None] * len(self.room_grid))
@@ -66,8 +78,10 @@ class World:
                     str += "-"
                 else:
                     str += " "
-                if room is not None:
+                if room is not None and not room in visited:
                     str += f"{room.id}".zfill(3)
+                elif room is not None and room in visited:
+                    str += f"{bcolors.WARNING}{room.id}{bcolors.ENDC}".zfill(3)
                 else:
                     str += "   "
                 if room is not None and room.e_to is not None:
